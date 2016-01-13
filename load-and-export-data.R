@@ -1,4 +1,4 @@
- 
+# Quick reference for loading and exporting data
 
 # The following command clears your R workspace (all variables in memory) to give you
 # a fresh start. If you want to do this, execute the command without the # symbol.
