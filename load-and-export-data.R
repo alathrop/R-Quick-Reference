@@ -111,3 +111,18 @@ week2 = read.sas7bdat('data\\credit_card_week_2.sas7bdat')
 
 # d.fail[,date.cols] <- apply(d.fail[,date.cols],2, function(x) 
 #                             as.POSIXct(x, format="%Y/%m/%d %H:%M:%S", origin="1970-01-01"))
+
+# From Microsoft AzureML Regression Example
+
+    # the following read function returns column dteday as chr "2011-01-01"
+    # BikeShare <- read.csv("./R-files/BikeSharing.csv", sep = ",", 
+    #                       header = T, stringsAsFactors = F )
+    
+    # the following converts dteday to POSIXct "2011-01-01"
+    # BikeShare$dteday <- as.POSIXct(strptime(
+    #   paste(BikeShare$dteday, " ", 
+    #         "00:00:00", 
+    #         sep = ""), 
+    #   "%Y-%m-%d %H:%M:%S"))
+
+###
