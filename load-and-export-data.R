@@ -34,7 +34,7 @@ df <- read.xls("data\\apple.xlsx", sheet="data", perl=zz)
 # -----
 # CSV
 # -----
-# read CSV
+##### read CSV
 MyData <- read.csv("data\\apple.csv", header=TRUE, check.names=FALSE, stringsAsFactors=FALSE)
 
 # Assuming your working directory is /home/hermie and you want to load a .csv file from a directory 
@@ -48,11 +48,9 @@ MyData <- read.csv("data\\apple.csv", header=TRUE, check.names=FALSE, stringsAsF
 #   
 # setwd('/home/hermie')
 # data_from_bob <- read.csv('../bob/otherDataFile.csv') # Of course, this will work
-# # only if you can read
-# # files from that directory
+# # only if you can read files from that directory
 
-
-# write CSV
+##### write CSV
 write.csv(MyData, file="data\\apple_out.csv")
 
 # -----
