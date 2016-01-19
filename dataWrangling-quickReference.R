@@ -1,6 +1,8 @@
 # Data Wrangling Quick Reference
 
 library(dplyr)
+library(ISLR)
+
 
 data(Wage)
 summary(Wage)
