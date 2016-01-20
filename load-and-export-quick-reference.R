@@ -130,4 +130,11 @@ week2 = read.sas7bdat('data\\credit_card_week_2.sas7bdat')
 library("devtools")
 install_github("Ram-N/weatherData")
 devtools::install_github("hadley/ggplot2")
-library("ggplot2")
+
+# Download from URL
+library(downloader)
+url <- "https://raw.githubusercontent.com/genomicsclass/dagdata/master/inst/extdata/msleep_ggplot2.csv"
+
+filename <- "msleep_ggplot2.csv"
+if (!file.exists(filename)) download(url,filename)
+msleep <- read.csv("msleep_ggplot2.csv")
