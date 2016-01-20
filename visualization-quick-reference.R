@@ -2,7 +2,8 @@
 
 require(ggplot2)
 
-# Multiple plots using lapply
+# Multiple plots using lapply and vector of times as a parameter
+# From MSFT Azure ML tutorial book
 ## Make time series plots for certain hours of the day 
 require( ggplot2) 
 times <- c( 7, 9, 12, 15, 18, 20, 22) 
@@ -18,7 +19,7 @@ lapply( times, function( times){
   )
 
 #####
-
+# From MSFT Azure ML tutorial book
 # Example of using the same x column with different y columns (and associated labels)
 # in a plot, using the Map() function
 
@@ -45,9 +46,8 @@ Map( function( X, label){
   xAxis, labels)
 
 #####
-
-
 # Similar example using continuous variables and the Map() function, plus loess smoothed line
+# From MSFT Azure ML tutorial book
 # Finally, we’ll create some plots to explore the continuous variables, using the following code:
 
 ## Look at the relationship between predictors and bike demand
@@ -65,6 +65,30 @@ Map( function( X, label){
   theme( text = element_text( size = 20)) }, 
 xAxis, labels)
 
+##########
+
+# Plotting residuals | Use lapply and implicit function for multiple plots
+# From MSFT Azure ML tutorial book
+## Compute the residuals
+library(dplyr)
+inFrame <-  mutate(inFrame, resids = predicted - cnt)
+
+## Plot the residuals. First a histogram and 
+## a qq plot of the residuals.
+ggplot(inFrame, aes(x = resids)) + 
+  geom_histogram(binwidth = 1, fill = "white", color = "black")
+
+qqnorm(inFrame$resids)
+qqline(inFrame$resids)
+
+## Plot the residuals by hour and transformed work hour.
+inFrame <- mutate(inFrame, fact.hr = as.factor(hr),
+                  fact.workTime = as.factor(workTime))                                  
+facts <- c("fact.hr", "fact.workTime") 
+lapply(facts, function(x){ 
+  ggplot(inFrame, aes_string(x = x, y = "resids")) + 
+    geom_boxplot( ) + 
+    ggtitle("Residual of actual versus predicted bike demand by hour")})
   
 
 ###########
