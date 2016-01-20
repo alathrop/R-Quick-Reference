@@ -124,3 +124,9 @@ week2 = read.sas7bdat('data\\credit_card_week_2.sas7bdat')
     #   "%Y-%m-%d %H:%M:%S"))
 
 ###
+
+# Packages from GitHub
+
+library("devtools")
+install_github("Ram-N/weatherData")
+devtools::install_github("hadley/ggplot2")
