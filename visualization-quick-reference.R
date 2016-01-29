@@ -82,6 +82,9 @@ qqnorm(inFrame$resids)
 qqline(inFrame$resids)
 
 ## Plot the residuals by hour and transformed work hour.
+library(dplyr)
+
+# mutate function requires dplyr package
 inFrame <- mutate(inFrame, fact.hr = as.factor(hr),
                   fact.workTime = as.factor(workTime))                                  
 facts <- c("fact.hr", "fact.workTime") 
