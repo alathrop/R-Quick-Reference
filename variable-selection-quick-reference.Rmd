@@ -1,4 +1,4 @@
-From Stanford Introduction to Statistical Learning course
+From Stanford Introduction to Statistical Learning course, Chapter 6
 R video session @ http://bit.ly/21k5WAF | Videos 11-14
 
 Model Selection
