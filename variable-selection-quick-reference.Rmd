@@ -1,4 +1,7 @@
-From Stanford Introduction to Statistical Learning course, Chapter 6
+library(rmarkdown)
+
+From Stanford Introduction to Statistical Learning course
+Chapter 6: Variable Selection
 R video session @ http://bit.ly/21k5WAF | Videos 11-14
 
 Model Selection
