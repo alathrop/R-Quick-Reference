@@ -1,0 +1,23 @@
+---
+title:  "TestTest"
+author: "Andy Lathrop"
+date:   "March 23, 2016"
+output: 
+  html_document:
+    theme: united
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: show
+---
+
+#### Built with Microsoft R Open version `r getRversion()`. More info at https://mran.revolutionanalytics.com/open/
+#### The current CRAN repository for packages is `r getOption("repos")`
+
+Setup options: echo means R code will be displayed | cache means results will be stored for future knits
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+* Bullet1
+    + Test1
+    + test2
