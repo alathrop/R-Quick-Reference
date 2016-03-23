@@ -99,4 +99,4 @@ more info at http://bit.ly/1Rzrqdy
     
 This means the remainder of your script will run with the packages from a specific date.
 
-![Caption](MSFT-R-Checkpoint.png)
+![Caption](myGraphics\\MSFT-R-Checkpoint.png)
