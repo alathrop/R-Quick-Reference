@@ -1,0 +1,185 @@
+---
+title:  "Support Vector Machines"
+author: "Author: Andy Lathrop with code from Stanford Introduction to Statistical Learning course"
+date:   "March 23, 2016"
+output: 
+  html_document:
+    theme: united
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: show
+---
+***
+##### Use the floating **table of contents** on the left for navigation, and **gray boxes near code chunks** to show/hide
+***
+##### Code from **Stanford Introduction to Statistical Learning** course
+##### More info at <http://stanford.io/1pAndtv>
+
+##### Chapter 9: Support Vector Machines
+
+##### R video session @ <http://bit.ly/1U6kVPS> | Videos 5-6
+***
+Admin notes {.tabset}
+=======================
+***
+**rmarkdown** package required
+------------------------------
+#### This is an R markdown (.Rmd) document and requires the **'rmarkdown'** package
+#### Use the tabs in this section for installation information
+#### more info at <http://rmarkdown.rstudio.com/>
+***
+
+**rmarkdown** installation
+--------------------------
+#### If you are working within RStudio then you can simply install the current release of RStudio (both the rmarkdown package and pandoc are included). <https://www.rstudio.com/products/rstudio/download/preview/>
+#### The code below will install the 'rmarkdown' package if needed
+```{r rmarkdown install}
+if (!require("rmarkdown")) install.packages("rmarkdown", repos='https://cran.revolutionanalytics.com')
+library(rmarkdown)
+```
+***
+#### **rmarkdown** global setup options  
+#####Setup options: echo means R code will be displayed | cache means results will be stored for future knits
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(cache = FALSE, echo = TRUE)
+```
+***
+package management 
+------------------
+#### This section manages all packages required for this script
+##### The 'p_load()' function from the pacman package is the base equivalent of 'install.packages()' AND 'library()'
+```{r package management}
+# ensure package 'pacman' for package management is installed
+if (!require("pacman")) install.packages("pacman")
+library(pacman)
+
+# add any required packages to the p_load() function parameters 
+pacman::p_load(rmarkdown, 
+               e1071, # for support vector machines 
+               update=TRUE)
+pacman::p_loaded() # check which packages are loaded
+```
+
+***
+about
+-----
+#### Built with **Microsoft R Open** version `r Revo.version`. More info at <https://mran.revolutionanalytics.com/open/>
+#### The current CRAN repository for this R session is `r getOption("repos")`
+#### The current default MRAN repository can be found at <https://mran.revolutionanalytics.com/timemachine/>
+***
+
+SVM: Support Vector Machines
+============================
+To demonstrate the SVM, it is easiest to work in low dimensions, so we can see the data.
+
+Linear SVM classifier
+---------------------
+Lets generate some data in two dimensions, and make them a little separated.
+```{r generate data and plot}
+library(rmarkdown)
+set.seed(10111)
+
+# generate 40 observations, normally distributed, mean=0, sd=1
+# x is a matrix of 20 rows, 2 cols
+x<-matrix(rnorm(40),20,2)
+# y is a vector that takes values -1 and 1, with 10 observations each
+y<-rep(c(-1,1),c(10,10))
+# for x index values where y = 1, add 1 to the current value of x
+# in this case, the last 10 values of y have y=1, so the last 10 values of x are used
+x[y==1,]<-x[y==1,]+1
+
+plot(x,col=y+3,pch=19)
+```
+
+Now we will load the package `e1071` which contains the `svm` function we will use. We then compute the fit. Notice that we have to specify a `cost` parameter, which is a tuning parameter. 
+```{r fit and plot svm}
+library(e1071) 
+dat=data.frame(x,y=as.factor(y))
+
+# cost is tuning parameter
+# param scale=FALSE means do not standardize the variables
+svmfit=svm(y~.,data=dat,kernel="linear",cost=10,scale=FALSE)
+print(svmfit)
+plot(svmfit,dat)
+```
+
+As mentioned in the the chapter, the plot function is somewhat crude, and plots X2 on the horizontal axis (unlike what R would do automatically for a matrix). Lets see how we might make our own plot.
+
+The first thing we will do is make a grid of values for X1 and X2. We will write a function to do that,
+in case we want to reuse it. It uses the handy function `expand.grid`, and produces the coordinates of `n*n` points on a lattice covering the domain of `x`. Having made the lattice, we make a prediction at each point on the lattice. We then plot the lattice, color-coded according to the classification. Now we can see the decision boundary.
+
+The support points (points on the margin, or on the wrong side of the margin) are indexed in the `$index` component of the fit.
+
+```{r custom svm plot}
+make.grid=function(x,n=75){ # 75x75 grid
+  grange=apply(x,2,range)
+  x1=seq(from=grange[1,1],to=grange[2,1],length=n)
+  x2=seq(from=grange[1,2],to=grange[2,2],length=n)
+  expand.grid(X1=x1,X2=x2)
+  }
+xgrid=make.grid(x)
+ygrid=predict(svmfit,xgrid)
+plot(xgrid,col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.2) # grid points
+points(x,col=y+3,pch=19) # original points
+points(x[svmfit$index,],pch=5,cex=2) # squares indicate support points #cool
+```
+
+The `svm` function is not too friendly, in that we have to do some work to get back the linear coefficients, as described in the text. Probably the reason is that this only makes sense for linear kernels, and the function is more general. Here we will use a formula to extract the coefficients; for those interested in where this comes from, have a look in chapter 12 of ESL ("Elements of Statistical Learning").
+
+We extract the linear coefficients, and then using simple algebra, we include the decision boundary and the two margins.
+
+```{r extract linear coefficients plot boundary}
+beta=drop(t(svmfit$coefs)%*%x[svmfit$index,])
+beta0=svmfit$rho
+plot(xgrid,col=c("red","blue")[as.numeric(ygrid)],pch=20,cex=.2)
+points(x,col=y+3,pch=19)
+points(x[svmfit$index,],pch=5,cex=2)
+abline(beta0/beta[2],-beta[1]/beta[2])
+abline((beta0-1)/beta[2],-beta[1]/beta[2],lty=2)
+abline((beta0+1)/beta[2],-beta[1]/beta[2],lty=2)
+```
+
+Just like for the other models in this book, the tuning parameter `C` has to be selected.
+Different values will give different solutions. Rerun the code above, but using `C=1`, and see what we mean. One can use cross-validation to do this.
+
+Nonlinear SVM
+--------------
+Instead, we will run the SVM on some data where a non-linear boundary is called for. We will use the mixture data from ESL
+
+```{r get data for nonlinear example}
+load(url("http://www.stanford.edu/~hastie/ElemStatLearn/datasets/ESL.mixture.rda"))
+names(ESL.mixture)
+rm(x,y)
+attach(ESL.mixture)
+```
+
+These data are also two dimensional. Lets plot them and fit a nonlinear SVM, using a radial kernel.
+```{r plot data}
+plot(x,col=y+1)
+dat=data.frame(y=factor(y),x)
+fit=svm(factor(y)~.,data=dat,scale=FALSE,kernel="radial",cost=5)
+```
+
+Now we are going to create a grid, as before, and make predictions on the grid.
+These data have the grid points for each variable included on the data frame.
+```{r}
+xgrid=expand.grid(X1=px1,X2=px2)
+ygrid=predict(fit,xgrid)
+plot(xgrid,col=as.numeric(ygrid),pch=20,cex=.2)
+points(x,col=y+1,pch=19)
+```
+
+We can go further, and have the predict function produce the actual function estimates at each of our grid points. We can include the actual decision boundary on the plot by making use of the contour function. On the dataframe is also `prob`, which is the true probability of class 1 for these data, at the gridpoints. If we plot its 0.5 contour, that will give us the _Bayes Decision Boundary_, which is the best one could ever do.
+```{r plot contours}
+func=predict(fit,xgrid,decision.values=TRUE)
+func=attributes(func)$decision
+xgrid=expand.grid(X1=px1,X2=px2)
+ygrid=predict(fit,xgrid)
+plot(xgrid,col=as.numeric(ygrid),pch=20,cex=.2)
+points(x,col=y+1,pch=19)
+
+contour(px1,px2,matrix(func,69,99),level=0,add=TRUE)
+contour(px1,px2,matrix(prob,69,99),level=.5,add=TRUE,col="blue",lwd=2)
+```
+
+We see in this case that the radial kernel has done an excellent job.
