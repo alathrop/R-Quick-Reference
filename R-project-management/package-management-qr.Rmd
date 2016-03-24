@@ -1,0 +1,152 @@
+---
+title:  "Package Management Quick Reference"
+author: "Andy Lathrop"
+date:   "March 23, 2016"
+output: 
+  html_document:
+    theme: united
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: show
+---
+
+#### Built with **Microsoft R Open** version `r Revo.version`. More info at https://mran.revolutionanalytics.com/open/
+#### The current CRAN repository for local packages is `r getOption("repos")`
+#### The current default MRAN repository can be found at https://mran.revolutionanalytics.com/timemachine/
+
+Setup options: echo means R code will be displayed | cache means results will be stored for future knits
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+```
+
+# Admin notes
+#### This is an R markdown (.Rmd) document and requires the **'rmarkdown'** package
+#### Use the floating **table of contents** on the left for navigation, and gray boxes near code chunks to show/hide
+***
+#### The code below will install the 'rmarkdown' package if needed
+```{r}
+if (!require("rmarkdown")) install.packages("rmarkdown", repos='https://cran.revolutionanalytics.com')
+library(rmarkdown)
+```
+
+# Package management utilities
+#### The list of CRAN mirrors can be found at https://cran.r-project.org/mirrors.html
+
+## Repo used by current R session
+```{r}
+getOption("repos")
+```
+
+## Current local library
+```{r}
+normalizePath(.libPaths(), winslash = "/")
+```
+
+## Local library of packages
+#### show first 10 packages
+```{r}
+installed.packages()[1:10, "Package"] 
+```
+
+## Set CRAN mirror site from list 
+#### (remove # to run code)
+```{r}
+# chooseCRANmirror()
+```
+
+## Set CRAN repo via URL
+#### (remove # to run code)
+```{r}
+# options(repos=structure(c(CRAN="http://cran.us.r-project.org")))
+# options(repos = c(CRAN = "https://cran.revolutionanalytics.com"))
+```
+
+## Install from a particular mirror
+#### (remove # to run code)
+```{r}
+# install.packages('rmarkdown', repos='http://cran.us.r-project.org')
+```
+
+## Permanently set CRAN repo
+#### sets repo at startup by modifying **Rprofile.site** file  
+#### This file is usually found in the "C:\\Program Files\\R\\R-n.n.n\\etc" path  
+#### For example "C:\\Program Files\\Microsoft\\MRO\\R-3.2.3\\etc"
+***
+#### More info on customizing startup at http://www.statmethods.net/interface/customizing.html
+#### (sample code below from Rprofile.site files. This code is set to NOT RUN in this Rmd file)  
+***
+#### **Make a backup before changing your Rprofile.site file!**  
+```{r eval=FALSE}
+# Original Rprofile.site file had 
+repos.date <- "2016-01-01"
+# and
+options(repos = c(CRAN = paste("https://mran.revolutionanalytics.com/snapshot/",repos.date,sep="")))
+
+# modified file has
+options(repos = c(CRAN = "https://cran.revolutionanalytics.com"))
+```
+
+## Add CRAN repos 
+#### (remove # to run code)
+```{r}
+# setRepositories(addURLs =
+#                   c(CRANxtras = "http://cran.us.r-project.org"))
+# setRepositories(addURLs =
+#                   c(CRAN = "http://cran.us.r-project.org"))
+```
+
+## Install from GitHub
+#### (remove # to run code)
+```{r}
+# if (!require("devtools")) install.packages("devtools")
+# library(devtools)
+# devtools::install_github("rstudio/addinexamples", type = "source")
+```
+
+## Packages w/ newer versions available
+```{r}
+# Check which packages have updates
+old.packages()
+# Make sure your current packages are up to date
+update.packages()
+```
+
+# 'pacman' for package management
+## Make sure 'pacman' is installed
+#### More info at https://github.com/trinker/pacman
+```{r}
+# ensure package 'pacman' for package management is installed
+if (!require("pacman")) install.packages("pacman")
+library(pacman)
+
+# alternate loading from GitHub
+# 'devtools' package is required
+if (!require("devtools")) install.packages("devtools")
+library(devtools)
+install_github("trinker/pacman")
+```
+## This is how to use 'pacman' in a script 
+#### Packages used in script: 'devtools' for developer functions, 'rmarkdown' for Rmd file creation, 'ggplot2' and 'ggfortify' for plotting. 'ggfortify' requires the package 'devtools' 
+***
+#### The 'p_load()' function is the base equivalent of 'install.packages()' AND 'library()'
+```{r}
+pacman::p_load(devtools, rmarkdown, ggplot2, ggfortify, update=TRUE)
+pacman::p_loaded()
+```
+
+# About using Microsoft R distribution
+#### Microsoft uses the MRAN repo for packages, usually a snapshot of the Austria CRAN repo from the first of the month
+**(more info at https://mran.revolutionanalytics.com/timemachine/ )**
+
+The 'checkpoint' package from MSFT is helpful for using a specific repo snapshot for a project. 
+More info at http://bit.ly/1Rzrqdy  
+
+* When you create a checkpoint, the checkpoint() function performs the following:
+    + Creates a snapshot folder to install packages. This library folder is located at ~/.checkpoint
+    + Scans your project folder for all packages used. Specifically, it searches for all instances of library() and requires() in your code.
+    + Installs these packages from the MRAN snapshot into your snapshot folder using install.packages()
+    + Sets options for your CRAN mirror to point to a MRAN snapshot, i.e. modify options(repos)
+    
+This means the remainder of your script will run with the packages from a specific date.
+
+![Caption](myGraphics\\MSFT-R-Checkpoint.png)
