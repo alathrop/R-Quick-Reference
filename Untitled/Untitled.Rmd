@@ -1,0 +1,62 @@
+---
+title:  "rmarkdown template"
+author: "Author: Andy Lathrop"
+date:   "March 23, 2016"
+output: 
+  html_document:
+    theme: united
+    toc: TRUE
+    toc_float: TRUE
+    code_folding: show
+---
+***
+##### Use the floating **table of contents** on the left for navigation, and **gray boxes near code chunks** to show/hide
+
+Admin notes {.tabset}
+=======================
+***
+**rmarkdown** package required
+------------------------------
+#### This is an R markdown (.Rmd) document and requires the **'rmarkdown'** package
+#### Use the tabs in this section for installation information
+#### more info at <http://rmarkdown.rstudio.com/>
+***
+
+**rmarkdown** installation
+--------------------------
+#### If you are working within RStudio then you can simply install the current release of RStudio (both the rmarkdown package and pandoc are included). <https://www.rstudio.com/products/rstudio/download/preview/>
+#### The code below will install the 'rmarkdown' package if needed
+```{r rmarkdown install}
+if (!require("rmarkdown")) install.packages("rmarkdown", repos='https://cran.revolutionanalytics.com')
+library(rmarkdown)
+```
+***
+#### **rmarkdown** global setup options  
+#####Setup options: echo means R code will be displayed | cache means results will be stored for future knits
+```{r setup, include=TRUE}
+knitr::opts_chunk$set(cache = TRUE, echo = TRUE)
+```
+***
+package management 
+------------------
+#### This section manages all packages required for this script
+##### The 'p_load()' function from the pacman package is the base equivalent of 'install.packages()' AND 'library()'
+```{r package management}
+# ensure package 'pacman' for package management is installed
+if (!require("pacman")) install.packages("pacman")
+library(pacman)
+
+# add any required packages to the p_load() function parameters 
+pacman::p_load(rmarkdown, 
+               e1071, # for support vector machines 
+               update=TRUE)
+pacman::p_loaded() # check which packages are loaded
+```
+
+***
+about
+-----
+##### Built with **Microsoft R Open** version `r Revo.version`. More info at <https://mran.revolutionanalytics.com/open/>
+##### The current CRAN repository for this R session is `r getOption("repos")`
+##### The current default MRAN repository can be found at <https://mran.revolutionanalytics.com/timemachine/>
+***
