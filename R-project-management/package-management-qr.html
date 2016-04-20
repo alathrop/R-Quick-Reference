@@ -245,7 +245,6 @@ div.tocify {
 <h4>The code below will install the ‘rmarkdown’ package if needed</h4>
 <pre class="r"><code>if (!require(&quot;rmarkdown&quot;)) install.packages(&quot;rmarkdown&quot;, repos='https://cran.revolutionanalytics.com')</code></pre>
 <pre><code>## Loading required package: rmarkdown</code></pre>
-<pre><code>## Warning: package 'rmarkdown' was built under R version 3.2.4</code></pre>
 <pre class="r"><code>library(rmarkdown)</code></pre>
 <hr />
 </div>
@@ -253,16 +252,16 @@ div.tocify {
 <div id="rmarkdown-setup-options" class="section level2">
 <h2><strong>rmarkdown</strong> setup options</h2>
 <p>Setup options: echo means R code will be displayed | cache means results will be stored for future knits</p>
-<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, cache = TRUE)</code></pre>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, cache = FALSE)</code></pre>
 <hr />
 </div>
 <div id="about" class="section level2">
 <h2>About</h2>
-<div id="built-with-microsoft-r-open-version-3-2.3-1.-more-info-at-httpsmran.revolutionanalytics.comopen" class="section level4">
-<h4>Built with <strong>Microsoft R Open</strong> version 3, 2.3, 1. More info at <a href="https://mran.revolutionanalytics.com/open/" class="uri">https://mran.revolutionanalytics.com/open/</a></h4>
+<div id="built-with-microsoft-r-open-version-3-2.4-1.-more-info-at-httpsmran.revolutionanalytics.comopen" class="section level4">
+<h4>Built with <strong>Microsoft R Open</strong> version 3, 2.4, 1. More info at <a href="https://mran.revolutionanalytics.com/open/" class="uri">https://mran.revolutionanalytics.com/open/</a></h4>
 </div>
-<div id="the-current-cran-repository-for-local-packages-is-httpscran.revolutionanalytics.com" class="section level4">
-<h4>The current CRAN repository for local packages is <a href="https://cran.revolutionanalytics.com" class="uri">https://cran.revolutionanalytics.com</a></h4>
+<div id="the-current-cran-repository-for-local-packages-is-httpsmran.microsoft.comsnapshot2016-04-01" class="section level4">
+<h4>The current CRAN repository for local packages is <a href="https://mran.microsoft.com/snapshot/2016-04-01" class="uri">https://mran.microsoft.com/snapshot/2016-04-01</a></h4>
 </div>
 <div id="the-current-default-mran-repository-can-be-found-at-httpsmran.revolutionanalytics.comtimemachine" class="section level4">
 <h4>The current default MRAN repository can be found at <a href="https://mran.revolutionanalytics.com/timemachine/" class="uri">https://mran.revolutionanalytics.com/timemachine/</a></h4>
@@ -278,25 +277,24 @@ div.tocify {
 <div id="repo-used-by-current-r-session" class="section level2">
 <h2>Repo used by current R session</h2>
 <pre class="r"><code>getOption(&quot;repos&quot;)</code></pre>
-<pre><code>##                                   CRAN 
-## &quot;https://cran.revolutionanalytics.com&quot;</code></pre>
+<pre><code>##                                             CRAN 
+## &quot;https://mran.microsoft.com/snapshot/2016-04-01&quot;</code></pre>
 </div>
 <div id="current-local-library" class="section level2">
 <h2>Current local library</h2>
 <pre class="r"><code>normalizePath(.libPaths(), winslash = &quot;/&quot;)</code></pre>
-<pre><code>## [1] &quot;C:/Program Files/Microsoft/MRO/R-3.2.3/library&quot;</code></pre>
+<pre><code>## [1] &quot;C:/Users/AndyLathrop/Documents/R/win-library/3.2&quot;
+## [2] &quot;C:/Program Files/Microsoft/MRO/R-3.2.4/library&quot;</code></pre>
 </div>
 <div id="local-library-of-packages" class="section level2">
 <h2>Local library of packages</h2>
 <div id="show-first-10-packages" class="section level4">
 <h4>show first 10 packages</h4>
 <pre class="r"><code>installed.packages()[1:10, &quot;Package&quot;] </code></pre>
-<pre><code>##   addinexamples      assertthat            base       base64enc 
-## &quot;addinexamples&quot;    &quot;assertthat&quot;          &quot;base&quot;     &quot;base64enc&quot; 
-##              BB              BH   BiocInstaller          bitops 
-##            &quot;BB&quot;            &quot;BH&quot; &quot;BiocInstaller&quot;        &quot;bitops&quot; 
-##            boot            brew 
-##          &quot;boot&quot;          &quot;brew&quot;</code></pre>
+<pre><code>##      bitops     caTools      digest    evaluate     formatR       highr 
+##    &quot;bitops&quot;   &quot;caTools&quot;    &quot;digest&quot;  &quot;evaluate&quot;   &quot;formatR&quot;     &quot;highr&quot; 
+##   htmltools       knitr    magrittr    markdown 
+## &quot;htmltools&quot;     &quot;knitr&quot;  &quot;magrittr&quot;  &quot;markdown&quot;</code></pre>
 </div>
 </div>
 <div id="set-cran-mirror-site-from-list" class="section level2">
@@ -385,7 +383,11 @@ install_github(&quot;trinker/pacman&quot;)</code></pre>
 </div>
 <div id="the-p_load-function-is-the-base-equivalent-of-install.packages-and-library" class="section level4">
 <h4>The ‘p_load()’ function is the base equivalent of ‘install.packages()’ AND ‘library()’</h4>
-<pre class="r"><code>pacman::p_load(devtools, rmarkdown, ggplot2, ggfortify, update=TRUE)
+<pre class="r"><code>pacman::p_load(devtools, 
+               rmarkdown, 
+               ggplot2, 
+               ggfortify, 
+               update=TRUE)
 pacman::p_loaded()</code></pre>
 </div>
 </div>

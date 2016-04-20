@@ -1,7 +1,7 @@
 ---
 title:  "rmarkdown template"
 author: "Author: Andy Lathrop"
-date:   "March 23, 2016"
+date:   "Date: `r Sys.Date()`"
 output: 
   html_document:
     theme: united

@@ -289,8 +289,21 @@ if (!require(&quot;pacman&quot;)) install.packages(&quot;pacman&quot;)</code></p
 # add any required packages to the p_load() function parameters 
 pacman::p_load(rmarkdown, 
                e1071, # for support vector machines 
-               update=TRUE)
-pacman::p_loaded() # check which packages are loaded</code></pre>
+               update=TRUE)</code></pre>
+<pre><code>## 
+##   There is a binary version available but the source version is
+##   later:
+##                    binary      source needs_compilation
+## RcppArmadillo 0.6.600.4.0 0.6.700.3.0              TRUE
+## 
+##   Binaries will be installed</code></pre>
+<pre><code>## Warning: package 'pacman' is in use and will not be installed</code></pre>
+<pre><code>## package 'forecast' successfully unpacked and MD5 sums checked
+## package 'RcppArmadillo' successfully unpacked and MD5 sums checked
+## 
+## The downloaded binary packages are in
+##  C:\Users\AndyLathrop\AppData\Local\Temp\RtmpqGmTCX\downloaded_packages</code></pre>
+<pre class="r"><code>pacman::p_loaded() # check which packages are loaded</code></pre>
 <pre><code>## [1] &quot;e1071&quot;         &quot;pacman&quot;        &quot;rmarkdown&quot;     &quot;RevoUtilsMath&quot;</code></pre>
 <hr />
 </div>

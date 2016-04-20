@@ -19,8 +19,7 @@ fix(trnData)
 # -----
 # Excel
 # -----
-require(gdata)
-library(gdata)
+library(gdata) # requires Perl installation
 
 # define path to perl (perl is required for gdata)
 zz <- file.path("C:", "Perl64", "bin", "perl.exe")
@@ -30,6 +29,10 @@ xlsFormats(perl = zz, verbose = FALSE)
 # read Excel using gdata
 df <- read.xls("data\\apple.xlsx", sheet="data", perl=zz)
 
+###
+library(XLConnect) # requires Java (same architecture as R i.e. 64-bit for both)
+wb = loadWorkbook("data/metal-dataXLS.xlsx")
+df = readWorksheet(wb, sheet = "concentrator-data-APR16", header = TRUE)
 
 # -----
 # CSV

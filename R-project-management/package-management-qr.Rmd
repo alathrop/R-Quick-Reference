@@ -35,7 +35,7 @@ library(rmarkdown)
 ---------------------------
 Setup options: echo means R code will be displayed | cache means results will be stored for future knits
 ```{r setup, include=TRUE}
-knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
 ```
 ***
 About
@@ -152,7 +152,11 @@ This is how to use 'pacman' in a script
 ***
 #### The 'p_load()' function is the base equivalent of 'install.packages()' AND 'library()'
 ```{r eval=FALSE}
-pacman::p_load(devtools, rmarkdown, ggplot2, ggfortify, update=TRUE)
+pacman::p_load(devtools, 
+               rmarkdown, 
+               ggplot2, 
+               ggfortify, 
+               update=TRUE)
 pacman::p_loaded()
 ```
 
