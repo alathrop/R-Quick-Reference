@@ -1,0 +1,88 @@
+
+#Text Analytics with Microsoft Cognitive Services
+
+[Cognitive Services](https://www.microsoft.com/cognitive-services) consists of a series of APIs for advanced text, vision, and speech integration. 
+
+In order to take advantage of these APIs such as Text Analytics, you can sign up in the [Azure Portal](https://portal.azure.com). You can also sign up for Preview APIs such as Lingustic Analysis directly from the Cognitive Services website.
+
+![](https://github.com/deldersveld/ms-cognitive/raw/master/images/cogntive-services.PNG)
+
+## What does the Text Analytics API offer?
+
+This demo focuses on connecting to the [Text Analytics API](https://www.microsoft.com/cognitive-services/en-us/text-analytics/documentation) to obtain sentiment scores and extract key phrases. In addition to those endpoints, the API also offers language and topic detection. The R language is used for the demo, but any language or application that can send a POST request can take advantage of the API.
+
+![](https://github.com/deldersveld/ms-cognitive/raw/master/images/text-analytics-endpoints.PNG)
+
+
+## Background
+
+For data, we use a small sample of Amazon reviews ([original source](https://www.kaggle.com/snap/amazon-fine-food-reviews)). We will connect to and download a CSV file from Azure Blob storage, then process the data using R. We connect to the Sentiment endpoint to obtain a score from 0 (negative) to 1 (positive). We then connect to the Key Phrases endpoint to get a list of words or phrases that are helpful for categorizing each review. 
+
+Note that by using the API free tier, you can process 5,000 transactions per month. In the case of this demo, we send 100 records to the API and obtain sentiment scores and phrases for each record. Since we connect to two endpoints with 100 records, we use 200 transactions.
+
+
+library(httr)
+library(jsonlite)
+library(dplyr)
+
+base.url <- "https://westus.api.cognitive.microsoft.com/text/analytics/v2.0/"
+
+Request <- function(call.url, call.source){
+  headers <- add_headers("Content-Type" = "application/json", "Ocp-Apim-Subscription-Key" = key)
+  raw.result <- POST(call.url, headers, body = call.source)
+  text.result <- fromJSON(content(raw.result, "text"))
+  final.result <- as.data.frame(text.result[1])
+  return(final.result)
+}
+
+Sentiment <- function(source){
+  sentiment.url <- paste0(base.url, "sentiment")
+  sentiment.body <- toJSON(list(documents = source))
+  sentiment.result <- Request(sentiment.url, sentiment.body)
+  colnames(sentiment.result) <- c("sentiment", "id")
+  return(sentiment.result)
+}
+
+KeyPhrases <- function(source){
+  phrases.url <- paste0(base.url, "keyPhrases")
+  phrases.body <- toJSON(list(documents = source))
+  phrases.result <- Request(phrases.url, phrases.body)
+  colnames(phrases.result) <- c("key.phrases", "id")
+  return(phrases.result)
+}
+
+Languages <- function(source){
+  languages.url <- paste0(base.url, "languages")
+  languages.body <- toJSON(list(documents = source))
+  languages.result <- Request(languages.url, languages.body)
+  colnames(languages.result) <- c("id", "detected.languages")
+  return(languages.result)
+}
+
+#enter key manually for now as readLine or other key storage does not work for Jupyter input
+#you can regenerate your key in the Azure Portal so that anyone who publicly views it can no longer use it
+
+key <- "[Enter API key]"
+
+GET("https://drecognitive.blob.core.windows.net/samples/amazon-fine-food-samples.csv", 
+    write_disk("amazon-fine-food-samples.csv", overwrite=TRUE))
+
+raw <- read.csv("amazon-fine-food-samples.csv", stringsAsFactors = FALSE)
+language <- "en"
+text.source <- select(raw, Id, Text)
+text.source <- data.frame(language, text.source, stringsAsFactors = FALSE)
+colnames(text.source) <- c("language", "id", "text")
+text.source$id <- as.character(text.source$id)
+head(text.source)
+
+text.sentiment <- Sentiment(text.source)
+head(text.sentiment)
+
+text.key.phrases <- KeyPhrases(text.source)
+head(text.key.phrases)
+
+combined <- list(text.source, text.sentiment, text.key.phrases)
+text.results <- Reduce(inner_join, combined)
+head(text.results)
+
+text.results
