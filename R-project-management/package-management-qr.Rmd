@@ -162,6 +162,9 @@ pacman::p_load(devtools,
 pacman::p_loaded()
 ```
 
+# change package (library) path
+# <http://bit.ly/2dnGM6T>
+
 About using Microsoft R distribution
 ====================================
 #### Microsoft uses the MRAN repo for packages, usually a snapshot of the Austria CRAN repo from the first day of the month
